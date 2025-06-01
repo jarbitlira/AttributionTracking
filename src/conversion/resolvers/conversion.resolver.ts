@@ -1,0 +1,39 @@
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { ConversionInputDto } from '../dtos/conversion.dto';
+import { ConversionService } from '../services/conversion.service';
+import { Conversion } from '../../core/schemas/conversion.schema';
+
+@Resolver(() => Conversion)
+export class ConversionResolver {
+  constructor(private readonly conversionService: ConversionService) {}
+
+  @Query(() => Conversion, {
+    name: 'conversion',
+    description: 'Get a conversion by ID',
+    nullable: true,
+  })
+  async getConversionById(
+    @Args('id', { type: () => String }) id: string,
+  ): Promise<Conversion | null> {
+    return await this.conversionService.getConversionById(id);
+  }
+
+  @Query(() => [Conversion], {
+    name: 'conversions',
+    description: 'Get all conversions',
+    nullable: true,
+  })
+  async conversions() {
+    return await this.conversionService.getConversions();
+  }
+
+  @Mutation(() => Conversion)
+  async createConversion(
+    @Args('conversion', {
+      type: () => ConversionInputDto,
+    })
+    conversion: ConversionInputDto,
+  ): Promise<any> {
+    return this.conversionService.createConversion(conversion);
+  }
+}

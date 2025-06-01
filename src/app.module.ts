@@ -10,6 +10,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
+import { ConversionModule } from './conversion/conversion.module';
+import { Ga4EventsModule } from './ga4-events/ga4-events.module';
 
 @Module({
   imports: [
@@ -25,9 +27,10 @@ import { GraphQLModule } from '@nestjs/graphql';
       driver: ApolloDriver,
       autoSchemaFile: true,
     }),
+    ConversionModule,
+    Ga4EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {
-}
+export class AppModule {}

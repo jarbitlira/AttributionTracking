@@ -13,8 +13,4 @@ export class ConversionInputDto {
 
   @Field({ nullable: true })
   timestamp: string;
-
-  // createdAt: Date;
-  // updatedAt: Date;
 }
-
