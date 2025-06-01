@@ -4,16 +4,28 @@ import { AppService } from './app.service';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { CoreModule } from './core/core.module';
 import { DatabaseModule } from './database/database.module';
-import { GraphQlModule } from './graph-ql/graph-ql.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
+import { ScheduleModule } from '@nestjs/schedule';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { GraphQLModule } from '@nestjs/graphql';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [configuration],
     }),
-    AnalyticsModule, CoreModule, DatabaseModule, GraphQlModule],
+    EventEmitterModule.forRoot(),
+    ScheduleModule.forRoot(),
+    AnalyticsModule,
+    CoreModule,
+    DatabaseModule,
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: true,
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
