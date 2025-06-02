@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { Ga4SeederService } from './services/ga4-seeder.service';
 import { CoreModule } from '../core/core.module';
 import { Ga4EventService } from './services/ga4-event.service';
+import { Ga4ClientService } from './services/ga4-client.service';
 
 @Module({
   imports: [
@@ -11,8 +12,8 @@ import { Ga4EventService } from './services/ga4-event.service';
     CoreModule,
     MongooseModule,
   ],
-  providers: [Ga4SeederService, Ga4EventService],
-  exports: [Ga4SeederService, Ga4EventService],
+  providers: [Ga4ClientService, Ga4SeederService, Ga4EventService],
+  exports: [Ga4ClientService, Ga4SeederService, Ga4EventService],
 })
 export class Ga4EventsModule {
 }

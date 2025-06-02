@@ -12,7 +12,7 @@ export class IntegrationsService {
 
   /**
    * Parses a conversion to the format required by Meta (Facebook) Conversions API.
-   * @param conversion
+   * @param {Conversion} conversion
    */
   parseConversionToMetaFormat(conversion: Conversion) {
     this.logger.log("Report conversion to Meta Conversions API");
@@ -31,7 +31,7 @@ export class IntegrationsService {
 
   /**
    * Parses a conversion to the format required by Google Ads.
-   * @param conversion
+   * @param {Conversion} conversion
    */
   parseConversionToGoogleAdsFormat(conversion: Conversion) {
     this.logger.log("Report conversion to Google Ads API");
@@ -46,7 +46,7 @@ export class IntegrationsService {
   /**
    * This method is called when a conversion is created.
    * It will report the conversion to the respective platform based on the attributed source.
-   * @param conversion
+   * @param {Conversion} conversion
    */
   @OnEvent('conversion.created', { async: true })
   reportConversion(conversion: Conversion) {

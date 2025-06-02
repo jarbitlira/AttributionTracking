@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AnalyticsService } from './services/analytics.service';
-import { Ga4Service } from './services/ga4.service';
 import { ConfigModule } from '@nestjs/config';
 import { AnalyticsController } from './controllers/analytics.controller';
+import { Ga4EventsModule } from '../ga4-events/ga4-events.module';
 
 @Module({
-  imports: [ConfigModule],
-  providers: [Ga4Service, AnalyticsService],
+  imports: [ConfigModule, Ga4EventsModule],
+  providers: [ AnalyticsService],
   exports: [AnalyticsService],
   controllers: [AnalyticsController],
 })
