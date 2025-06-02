@@ -1,18 +1,19 @@
 import { Controller, Get, Query, Res } from '@nestjs/common';
 import { Response } from 'express';
-import { AnalyticsService } from './services/analytics.service';
 import { OAuth2Client } from 'google-auth-library';
 import { ConfigService } from '@nestjs/config';
+import { AnalyticsService } from '../services/analytics.service';
 
 // import { OAuth2Client } from 'google-auth-library';
-
 
 @Controller('analytics')
 export class AnalyticsController {
   private oAuth2Client: OAuth2Client;
 
-  constructor(private readonly analyticsService: AnalyticsService,
-    private readonly configService: ConfigService) {
+  constructor(
+    private readonly analyticsService: AnalyticsService,
+    private readonly configService: ConfigService,
+  ) {
     this.oAuth2Client = new OAuth2Client(
       this.configService.get('google.credentials.client_id'),
       this.configService.get('google.credentials.client_secret'),
@@ -33,9 +34,8 @@ export class AnalyticsController {
     res.redirect(authorizationUrl);
   }
 
-
   @Get('authenticated')
-  async authenticated(@Query() params) {
+  async authenticated(@Query() params: { code: string }) {
     const { code } = params;
     const result = await this.oAuth2Client.getToken(code);
     this.oAuth2Client.setCredentials(result.tokens);
@@ -46,6 +46,4 @@ export class AnalyticsController {
   pageViewEvents() {
     return this.analyticsService.getPageViewEvents();
   }
-
-
 }

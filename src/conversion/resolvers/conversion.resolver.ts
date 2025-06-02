@@ -2,10 +2,14 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ConversionInputDto } from '../dtos/conversion.dto';
 import { ConversionService } from '../services/conversion.service';
 import { Conversion } from '../../core/schemas/conversion.schema';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Resolver(() => Conversion)
 export class ConversionResolver {
-  constructor(private readonly conversionService: ConversionService) {}
+  constructor(
+    private readonly conversionService: ConversionService,
+    private eventEmitter: EventEmitter2,
+  ) {}
 
   @Query(() => Conversion, {
     name: 'conversion',
@@ -34,6 +38,8 @@ export class ConversionResolver {
     })
     conversion: ConversionInputDto,
   ): Promise<any> {
-    return this.conversionService.createConversion(conversion);
+    const newConversion = this.conversionService.createConversion(conversion);
+    this.eventEmitter.emit('conversion.created', newConversion);
+    return newConversion;
   }
 }

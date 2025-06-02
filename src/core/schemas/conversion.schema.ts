@@ -23,6 +23,10 @@ export class Conversion {
   @Field({ nullable: true })
   timestamp: Date;
 
+  @Prop({ type: Number })
+  @Field({ nullable: true })
+  conversionValue: number;
+
   @Prop()
   @Field({ nullable: true })
   attributedSource: string;
