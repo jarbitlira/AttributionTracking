@@ -5,16 +5,13 @@ import { CoreModule } from '../core/core.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { Ga4EventsModule } from '../ga4-events/ga4-events.module';
-import { conversionProvider } from './providers/conversion.provider';
 
 @Module({
   imports: [
     CoreModule,
     ConfigModule,
     Ga4EventsModule,
-    MongooseModule.forFeatureAsync([
-      conversionProvider
-    ]),
+    MongooseModule.forFeature([]),
   ],
   providers: [ConversionResolver, ConversionService],
   exports: [ConversionResolver, ConversionService],

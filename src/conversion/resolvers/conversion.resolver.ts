@@ -3,6 +3,7 @@ import { ConversionInputDto } from '../dtos/conversion.dto';
 import { ConversionService } from '../services/conversion.service';
 import { Conversion } from '../../core/schemas/conversion.schema';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { UsePipes, ValidationPipe } from '@nestjs/common';
 
 @Resolver(() => Conversion)
 export class ConversionResolver {
@@ -31,6 +32,7 @@ export class ConversionResolver {
     return await this.conversionService.getConversions();
   }
 
+  @UsePipes(new ValidationPipe({ transform: true }))
   @Mutation(() => Conversion)
   async createConversion(
     @Args('conversion', {

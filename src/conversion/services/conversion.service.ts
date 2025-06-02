@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Ga4EventService } from '../../ga4-events/services/ga4-event.service';
 import { Ga4Event } from '../../core/schemas/ga4-event.schema';
+import { HashingService } from '../../core/services/hashing.service';
 
 @Injectable()
 export class ConversionService {
@@ -13,6 +14,7 @@ export class ConversionService {
 
   constructor(
     private readonly ga4EventService: Ga4EventService,
+    private readonly hashingService: HashingService,
     @InjectModel(Conversion.name) private conversionModel: Model<Conversion>,
   ) {
   }
@@ -29,13 +31,17 @@ export class ConversionService {
     conversionData: ConversionInputDto,
   ): Promise<Conversion> {
     const conversion = new this.conversionModel(conversionData);
-
+    conversion.emailHash = this.hashingService.hashValue(conversionData.email);
+    await conversion.save();
     /**
      * Attribution logic using the Ga4Events records
      */
-    await this.ga4EventService.getLatestPageViewEventByUserId(conversionData.userId)
+    this.logger.log(`Creating conversion for user: ${conversion.userId} at ${conversion.timestamp}`);
+    await this.ga4EventService.getAttributionPageViewEventByUserId(
+      conversion.userId,
+      conversion.timestamp,
+    )
       .then((ga4Event: Ga4Event) => {
-
         if (!ga4Event) {
           this.logger.warn('No page view event found for user');
           return;
@@ -52,11 +58,10 @@ export class ConversionService {
         conversion.set({
           attributedSource,
           attributedCampaign,
-          timestamp: ga4Event.eventTimestamp,
         });
+        return conversion.save();
       });
-
-    return conversion.save();
+    return conversion;
   }
 
   updateConversion(id: string, conversionData: ConversionInputDto) {

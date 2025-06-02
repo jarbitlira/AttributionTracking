@@ -18,15 +18,16 @@ export class Ga4EventService {
 
   /**
    * Get the most recent page_view event by user ID
-   * @param id
+   * @param userId
+   * @param conversionTimestamp
    */
-  async getLatestPageViewEventByUserId(id: string): Promise<Ga4Event | null> {
+  async getAttributionPageViewEventByUserId(userId: string, conversionTimestamp: Date): Promise<Ga4Event | null> {
     return await this.ga4EventModel.findOne({
-      userId: id,
+      userId,
       eventName: 'page_view',
+      eventTimestamp: { $lte: conversionTimestamp },
     }).sort({ eventTimestamp: -1 }).exec();
   }
-
 
   async createGa4Event(
     eventData: Ga4Event,

@@ -12,15 +12,15 @@ export class Conversion {
   userId: string;
 
   @Prop(String)
-  @Field({ nullable: true })
+  @Field()
   conversionType: string;
 
   @Prop({ type: String })
   @Field()
   emailHash: string;
 
-  @Prop({ type: Date })
-  @Field({ nullable: true })
+  @Prop({ type: Date, default: () => new Date() })
+  @Field({ defaultValue: new Date() })
   timestamp: Date;
 
   @Prop({ type: Number })
@@ -34,8 +34,10 @@ export class Conversion {
   @Prop()
   @Field({ nullable: true })
   attributedCampaign: string;
+  @Prop({ type: Date, default: () => new Date() })
   @Field()
   createdAt: Date;
+  @Prop({ type: Date, default: () => new Date() })
   @Field()
   updatedAt: Date;
 
