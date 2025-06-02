@@ -34,6 +34,10 @@ export class Conversion {
   @Prop()
   @Field({ nullable: true })
   attributedCampaign: string;
+  @Field()
+  createdAt: Date;
+  @Field()
+  updatedAt: Date;
 
   @Field(() => String)
   _id: Types.ObjectId;
@@ -43,11 +47,7 @@ export class Conversion {
   get id(): string {
     return this._id.toString();
   }
-
-  @Field()
-  createdAt: Date;
-  @Field()
-  updatedAt: Date;
 }
 
 export const ConversionSchema = SchemaFactory.createForClass(Conversion);
+ConversionSchema.index({ userId: 1, timestamp: -1 });

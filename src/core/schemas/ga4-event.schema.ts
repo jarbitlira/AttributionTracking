@@ -9,6 +9,7 @@ export type Ga4EventDocument = HydratedDocument<Ga4Event>;
 export class Ga4Event {
   @Prop({ type: String, required: true })
   eventName: string;
+
   @Prop({ type: String, required: true })
   userId: string;
 
@@ -18,8 +19,8 @@ export class Ga4Event {
   @Prop({ type: Object, required: true })
   params: Object;
 
-  @Prop({ type: Date, required: true })
-  createdAt: Date;
+  // @Prop({ type: Date, required: true })
+  // createdAt: Date;
 
 }
 
