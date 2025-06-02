@@ -38,7 +38,8 @@ export class ConversionResolver {
     })
     conversion: ConversionInputDto,
   ): Promise<any> {
-    const newConversion = this.conversionService.createConversion(conversion);
+    const newConversion = await this.conversionService.createConversion(conversion);
+    // Emit an event after creating a conversion to notify other parts of the application
     this.eventEmitter.emit('conversion.created', newConversion);
     return newConversion;
   }

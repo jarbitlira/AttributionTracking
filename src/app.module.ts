@@ -12,6 +12,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ConversionModule } from './conversion/conversion.module';
 import { Ga4EventsModule } from './ga4-events/ga4-events.module';
+import { IntegrationsModule } from './integrations/integrations.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { Ga4EventsModule } from './ga4-events/ga4-events.module';
     }),
     ConversionModule,
     Ga4EventsModule,
+    IntegrationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

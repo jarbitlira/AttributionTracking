@@ -1,4 +1,4 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { ObjectType } from '@nestjs/graphql';
 
@@ -16,12 +16,17 @@ export class Ga4Event {
   @Prop({ type: String, required: true })
   eventTimestamp: string;
 
-  @Prop({ type: Object, required: true })
-  params: Object;
+  @Prop(raw({
+    utm_source: { type: String, required: false },
+    utm_campaign: { type: String, required: false },
+  }))
+  params: {
+    utm_source: { type: String, required: false },
+    utm_campaign: { type: String, required: false },
+  };
 
-  // @Prop({ type: Date, required: true })
-  // createdAt: Date;
-
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const Ga4EventSchema = SchemaFactory.createForClass(Ga4Event);
