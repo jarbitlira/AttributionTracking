@@ -1,98 +1,151 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+## Project Overview
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project is a Node.js application using nestJS and GraphQL to manage conversions attributed to Google Analytics 4 (
+GA4) event data. It integrates with MongoDB for data storage and uses the GA4 Data API to fetch event data.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+It allows users to create conversions, which are then attributed to the last-click source based on GA4 event data.
 
-## Description
+## Setup Instructions
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### 1. MongoDB Atlas (Free Tier)
 
-## Project setup
+- Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
+- Create a free account and a new project.
+- Build a new cluster (choose the free tier).
+- Create a database user and whitelist your IP.
+- Get your connection string and update your `.env` file:
+  ```
+  MONGODB_URI=mongodb+srv://<user>:<password>@<cluster-url>/<dbname>?retryWrites=true&w=majority
+  ```
 
-```bash
-$ pnpm install
+### 2. GA4 Property & Data API
+
+- Create a Google Analytics 4 property in the [Google Analytics Console](https://analytics.google.com/).
+- Register a project in [Google Cloud Console](https://console.cloud.google.com/).
+- Enable the "Google Analytics Data API" for your project.
+- Create OAuth credentials and/or a service account.
+- Download the credentials JSON and add to your `.env`:
+  ```
+  GA4_CREDENTIALS=<your-oauth-json>
+  GA4_SERVICE_ACCOUNT_CREDENTIALS=<your-service-account-json>
+  ```
+- Set your GA4 property ID in the `.env` file:
+  ```
+    GA4_PROPERTY_ID=<your-ga4-property-id>
+  ```
+
+### 3. Node.js Dependencies
+
+- Install dependencies:
+  ```
+  pnpm install
+  ```
+
+### 4. Environment Variables
+
+- Copy `.env.example` to `.env` and fill in all required values (see above).
+
+### 5. Run the Application
+
+- Start the application:
+  ```
+  pnpm start
+  ```
+
+---
+
+## Example Queries
+
+### Create Conversion Mutation
+
+**GraphQL Mutation:**
+
+```graphql
+mutation createConversion($conversion: ConversionInput!) {
+    createConversion(conversion: $conversion) {
+        id
+        userId
+        emailHash
+        conversionType
+        conversionValue
+        attributedSource
+        attributedCampaign
+        timestamp
+    }
+}
 ```
 
-## Compile and run the project
+**Variables**
 
-```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+```
+{
+    "conversion": {
+        "userId": "12345",
+        "email": "random@email.com",
+        "conversionType": "purchase",
+        "conversionValue": 100,
+        "attributedSource": "google",
+        "attributedCampaign": "spring_sale"
+    }
+}
 ```
 
-## Run tests
+**Expected Response:**
 
-```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+```json
+{
+  "data": {
+    "createConversion": {
+      "id": "665f1c...",
+      "userId": "12345",
+      "conversionValue": 100,
+      "conversionType": "purchase",
+      "attributedSource": "google",
+      "attributedCampaign": "spring_sale",
+      "timestamp": "2024-06-01T12:00:00.000Z",
+      "emailHash": "e3b0c44298fc1fb924..."
+    }
+  }
+}
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## GA4 Integration Details
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+- **Data API Configuration:**
+    - Enable the GA4 Data API in Google Cloud.
+    - Create a service account credentials for API access.
 
-```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
-```
+- **GA4 Property Setup:**
+    - Set up a GA4 property and link it to your website/app. Ensure events are being sent to GA4.
+    - Add permissions for the service account to access the GA4 property.
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+- **Event Data Retrieval:**  
+  The backend fetches raw event data from GA4 using the Data API. This data is used for attribution and analytics.
 
-## Resources
+---
 
-Check out a few resources that may come in handy when working with NestJS:
+## Attribution Logic
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+When a conversion is created, it queries the GA4Event collection for the most recent
+event associated with the user and attributes the conversion to that source.
 
-## Support
+The backend matches conversion events to the latest relevant GA4 event using the userId and timestamp.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+---
 
-## Stay in touch
+## Sample Data Usage
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- The first time the project runs, it will populate the database with sample conversion data.
 
-## License
+---
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## Assumptions
+
+- Email addresses are only used for hashing and are not stored in the database.
+- All environment variables are set correctly before running the app.
+- You have a basic understanding of GraphQL and NestJS.
+- You have created a Google Cloud project and enabled the GA4 Data API.
+
+---
