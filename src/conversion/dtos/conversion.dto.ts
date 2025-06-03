@@ -5,7 +5,7 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { IsDateString, IsDefined, IsEmail, IsIn, IsNotEmpty, IsNumber, Min } from 'class-validator';
 
-@InputType('ConversionInput', { isAbstract: true })
+@InputType('ConversionInput')
 export class ConversionInputDto {
   @Field({
     nullable: true,
