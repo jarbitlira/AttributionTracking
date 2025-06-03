@@ -32,12 +32,13 @@ export class ConversionService {
   ): Promise<Conversion> {
     const conversion = new this.conversionModel(conversionData);
     conversion.emailHash = this.hashingService.hashValue(conversionData.email);
-    await conversion.save();
     /**
      * Attribution logic using the Ga4Events records
+     * This will find the most recent page_view event for the user
+     * and assign the attributed source and campaign to the conversion
      */
-    this.logger.log(`Creating conversion for user: ${conversion.userId} at ${conversion.timestamp}`);
-    await this.ga4EventService.getAttributionPageViewEventByUserId(
+    this.logger.log(`Creating conversion for user: ${ conversion.userId } at ${ conversion.timestamp }`);
+    await this.ga4EventService.getAttributionEvent(
       conversion.userId,
       conversion.timestamp,
     )
@@ -59,9 +60,9 @@ export class ConversionService {
           attributedSource,
           attributedCampaign,
         });
-        return conversion.save();
+        this.logger.log(`Conversion attributed to ${ attributedSource }`);
       });
-    return conversion;
+    return conversion.save();
   }
 
   updateConversion(id: string, conversionData: ConversionInputDto) {

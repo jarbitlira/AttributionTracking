@@ -18,7 +18,7 @@ export class AnalyticsController {
     this.oAuth2Client = new OAuth2Client(
       this.configService.get('google.credentials.client_id'),
       this.configService.get('google.credentials.client_secret'),
-      this.configService.get('google.credentials.redirect_uris')[0],
+      this.configService.get('host') + '/analytics/authenticated',
     );
   }
 
@@ -50,12 +50,17 @@ export class AnalyticsController {
     return this.ga4ClientService.parseReportResult(response);
   }
 
+  /**
+   * Endpoint to get page view events from GA4
+   * @param res
+   */
+
   @Get('page-view-events')
   async pageViewEvents(@Res() res: Response) {
     try {
-      return await this.analyticsService.getGa4Events();
+      res.send(await this.analyticsService.getGa4Events());
     } catch (e) {
-      throw new HttpException(e.message, HttpStatus.ALREADY_REPORTED);
+      throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

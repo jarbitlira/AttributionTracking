@@ -17,7 +17,7 @@ export class Ga4ClientService {
       // ? new BetaAnalyticsDataClient({ auth: auth as any })
       : new BetaAnalyticsDataClient({
         credentials: this.configService.get(
-          'google.serviceAccountCredentials',
+          'google.credentials',
         ),
       });
   }
