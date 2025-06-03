@@ -1,5 +1,5 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { ConversionInputDto } from '../dtos/conversion.dto';
+import { Arg, Mutation, Query, Resolver } from 'type-graphql';
+import { ConversionInputDto, ConversionOutput } from '../dtos/conversion.dto';
 import { ConversionService } from '../services/conversion.service';
 import { Conversion } from '../../core/schemas/conversion.schema';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -10,20 +10,21 @@ export class ConversionResolver {
   constructor(
     private readonly conversionService: ConversionService,
     private eventEmitter: EventEmitter2,
-  ) {}
+  ) {
+  }
 
-  @Query(() => Conversion, {
+  @Query(() => ConversionOutput, {
     name: 'conversion',
     description: 'Get a conversion by ID',
     nullable: true,
   })
   async getConversionById(
-    @Args('id', { type: () => String }) id: string,
+    @Arg('id', () => String) id: string,
   ): Promise<Conversion | null> {
     return await this.conversionService.getConversionById(id);
   }
 
-  @Query(() => [Conversion], {
+  @Query(() => [ConversionOutput], {
     name: 'conversions',
     description: 'Get all conversions',
     nullable: true,
@@ -33,13 +34,11 @@ export class ConversionResolver {
   }
 
   @UsePipes(new ValidationPipe({ transform: true }))
-  @Mutation(() => Conversion)
+  @Mutation(() => ConversionOutput)
   async createConversion(
-    @Args('conversion', {
-      type: () => ConversionInputDto,
-    })
+    @Arg('conversion', () => ConversionInputDto)
     conversion: ConversionInputDto,
-  ): Promise<any> {
+  ): Promise<ConversionOutput> {
     const newConversion = await this.conversionService.createConversion(conversion);
     // Emit an event after creating a conversion to notify other parts of the application
     this.eventEmitter.emit('conversion.created', newConversion);

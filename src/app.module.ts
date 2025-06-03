@@ -8,12 +8,13 @@ import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { GraphQLModule } from '@nestjs/graphql';
+import { GraphQLModule, GraphQLTimestamp } from '@nestjs/graphql';
 import { ConversionModule } from './conversion/conversion.module';
 import { Ga4EventsModule } from './ga4-events/ga4-events.module';
 import { IntegrationsModule } from './integrations/integrations.module';
 import { SentryModule } from '@sentry/nestjs/setup';
 import { configSetup } from './config/configuration';
+import { TypeGraphQLModule } from 'typegraphql-nestjs';
 
 @Module({
   imports: [
@@ -29,10 +30,17 @@ import { configSetup } from './config/configuration';
     AnalyticsModule,
     CoreModule,
     DatabaseModule,
-    GraphQLModule.forRoot<ApolloDriverConfig>({
+    // GraphQLModule.forRoot<ApolloDriverConfig>({
+    //   driver: ApolloDriver,
+    //   autoSchemaFile: true,
+    // }),
+
+    TypeGraphQLModule.forRoot({
       driver: ApolloDriver,
-      autoSchemaFile: true,
+      emitSchemaFile: true,
+      scalarsMap: [{ type: Date, scalar: GraphQLTimestamp }],
     }),
+
     ConversionModule,
     Ga4EventsModule,
     IntegrationsModule,

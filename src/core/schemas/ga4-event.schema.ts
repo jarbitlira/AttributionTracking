@@ -1,6 +1,6 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { ObjectType } from '@nestjs/graphql';
+import { ObjectType } from 'type-graphql';
 
 export type Ga4EventDocument = HydratedDocument<Ga4Event>;
 
