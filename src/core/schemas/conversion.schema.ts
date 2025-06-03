@@ -15,8 +15,8 @@ export class Conversion {
   @Field({ description: 'Type of conversion event (e.g., sale, signup).' })
   conversionType: string;
 
-  @Prop({ type: String })
-  @Field({ description: 'Hashed email address of the user.' })
+  @Prop({ type: String, nullable: true })
+  @Field({ description: 'Hashed email address of the user.', nullable: true })
   emailHash: string;
 
   @Prop({ type: Date, default: () => new Date().toISOString() })
