@@ -10,7 +10,7 @@ export type Ga4EventLogsDocument = HydratedDocument<Ga4EventLogs>;
  * It stores the responses from GA4, including user identifiers, event names, timestamps, and parameters.
  */
 @ObjectType()
-@Schema({ timestamps: true, collection: 'GA4EventLogs' })
+@Schema({ timestamps: true, collection: 'ga4_events_logs' })
 export class Ga4EventLogs {
   _id: string;
 

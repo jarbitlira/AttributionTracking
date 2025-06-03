@@ -5,7 +5,7 @@ import { ObjectType } from '@nestjs/graphql';
 export type Ga4EventDocument = HydratedDocument<Ga4Event>;
 
 @ObjectType()
-@Schema({ timestamps: true, collection: 'GA4Event' })
+@Schema({ timestamps: true, collection: 'ga4_events' })
 export class Ga4Event {
   @Prop({ type: String, required: true })
   eventName: string;
@@ -13,8 +13,8 @@ export class Ga4Event {
   @Prop({ type: String, required: true })
   userId: string;
 
-  @Prop({ type: String, required: true })
-  eventTimestamp: string;
+  @Prop({ type: Date, required: true })
+  eventTimestamp: Date;
 
   @Prop(raw({
     utm_source: { type: String, required: false },
@@ -32,3 +32,4 @@ export class Ga4Event {
 export const Ga4EventSchema = SchemaFactory.createForClass(Ga4Event);
 
 Ga4EventSchema.index({ userId: 1, eventTimestamp: -1 });
+Ga4EventSchema.index({ userId: 1, eventName: 1, eventTimestamp: -1 });

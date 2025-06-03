@@ -61,8 +61,11 @@ export class Ga4SeederService {
       return {
         eventName: event.eventName,
         userId: event.audienceId,
-        eventTimestamp: parse(event.dateHourMinute, 'yyyyMMddHHmm', new Date()), // transform dateHourMinute to Date object.
-        params: event.params,
+        eventTimestamp: parse(event.dateHourMinute, 'yyyyMMddHHmm', new Date()).toISOString(), // transform dateHourMinute to Date object.
+        params: {
+          utm_source: event.sessionSource,
+          utm_campaign: event.sessionCampaignName,
+        },
       };
     });
 

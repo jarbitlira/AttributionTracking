@@ -29,7 +29,7 @@ export class Ga4EventService {
    * @param {string} userId
    * @param {Date} conversionTimestamp
    */
-  async getAttributionPageViewEventByUserId(userId: string, conversionTimestamp: Date): Promise<Ga4Event | null> {
+  async getAttributionEvent(userId: string, conversionTimestamp: Date): Promise<Ga4Event | null> {
     return await this.ga4EventModel.findOne({
       userId,
       eventName: 'page_view',
@@ -65,8 +65,9 @@ export class Ga4EventService {
     let latestDateImport = latestImport?.createdAt ?? subDays(new Date(), 30);
 
     if (differenceInDays(latestDateImport, new Date()) === 0) {
-      const message = 'Events already imported for today, skipping import.';
-      throw new Error(message);
+      const message = 'Events already imported for today.';
+      this.logger.log(message);
+      return;
     }
 
     this.logger.log(latestDateImport);
@@ -79,8 +80,11 @@ export class Ga4EventService {
             return {
               eventName: event.eventName,
               userId: event.audienceId,
-              eventTimestamp: parse(event.dateHourMinute, 'yyyyMMddHHmm', new Date()), // transform dateHourMinute to Date object.
-              params: event.params,
+              eventTimestamp: parse(event.dateHourMinute, 'yyyyMMddHHmm', new Date()).toISOString(), // transform dateHourMinute to Date object.
+              params: {
+                utm_source: event.sessionSource,
+                utm_campaign: event.sessionCampaignName,
+              },
             };
           });
           const ga4EventsResult = await this.ga4EventModel.insertMany(parsedResponse);
