@@ -7,8 +7,8 @@ import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { GraphQLModule, GraphQLTimestamp } from '@nestjs/graphql';
+import { ApolloDriver } from '@nestjs/apollo';
+import { GraphQLTimestamp } from '@nestjs/graphql';
 import { ConversionModule } from './conversion/conversion.module';
 import { Ga4EventsModule } from './ga4-events/ga4-events.module';
 import { IntegrationsModule } from './integrations/integrations.module';
@@ -37,7 +37,6 @@ import { TypeGraphQLModule } from 'typegraphql-nestjs';
 
     TypeGraphQLModule.forRoot({
       driver: ApolloDriver,
-      emitSchemaFile: true,
       scalarsMap: [{ type: Date, scalar: GraphQLTimestamp }],
     }),
 
