@@ -62,7 +62,7 @@ export class ConversionService {
         });
         this.logger.log(`Conversion attributed to ${ attributedSource }`);
       });
-    return conversion.save();
+    return await conversion.save();
   }
 
   updateConversion(id: string, conversionData: ConversionInputDto) {
