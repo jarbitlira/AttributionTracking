@@ -1,7 +1,8 @@
 ## Project Overview
 
-This project is a Node.js application using nestJS and GraphQL to manage conversions attributed to Google Analytics 4 (
-GA4) event data. It integrates with MongoDB for data storage and uses the GA4 Data API to fetch event data.
+This project is a Node.js application using nestJS and GraphQL to manage conversions attributed to Google Analytics 4 
+(GA4) event data. 
+It integrates with MongoDB for data storage and uses the GA4 Data API to fetch event data.
 
 It allows users to create conversions, which are then attributed to the last-click source based on GA4 event data.
 
@@ -12,7 +13,7 @@ It allows users to create conversions, which are then attributed to the last-cli
 - Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
 - Create a free account and a new project.
 - Build a new cluster (choose the free tier).
-- Create a database user and whitelist your IP.
+- Create a database user and add your IP to the whitelist.
 - Get your connection string and update your `.env` file:
   ```
   MONGODB_URI=mongodb+srv://<user>:<password>@<cluster-url>/<dbname>?retryWrites=true&w=majority
@@ -24,7 +25,7 @@ It allows users to create conversions, which are then attributed to the last-cli
 - Register a project in [Google Cloud Console](https://console.cloud.google.com/).
 - Enable the "Google Analytics Data API" for your project.
 - Create OAuth credentials and/or a service account.
-- Download the credentials JSON and add to your `.env`:
+- Download the credential JSON and add to your `.env`:
   ```
   GA4_CREDENTIALS=<your-oauth-json>
   GA4_SERVICE_ACCOUNT_CREDENTIALS=<your-service-account-json>
@@ -60,7 +61,7 @@ It allows users to create conversions, which are then attributed to the last-cli
 
 **GraphQL Mutation:**
 
-```graphql
+```
 mutation createConversion($conversion: ConversionInput!) {
     createConversion(conversion: $conversion) {
         id
@@ -142,17 +143,19 @@ The backend matches conversion events to the latest relevant GA4 event using the
 
 ## Assumptions
 
-- Email addresses are only used for hashing and are not stored in the database.
 - All environment variables are set correctly before running the app.
 - You have a basic understanding of GraphQL and NestJS.
 - You have created a Google Cloud project and enabled the GA4 Data API.
+- You have a valid GA4 property with events being tracked.
+- You have installed all necessary Node.js dependencies.
 
 ---
 
 ### Quick Start with Docker Compose
 
 For fast testing and local development, you can spin up the application and its dependencies using Docker Compose.  
-**Before running the command, make sure to copy `.env.example` to `.env` and fill in all required environment variables.**
+**Before running the command, make sure to copy `.env.example` to `.env` and fill in all required environment variables.
+**
 
 To build and start the services, run:
 
