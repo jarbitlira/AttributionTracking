@@ -1,4 +1,4 @@
-import { Controller, Get, HttpException, HttpStatus, Query, Res } from '@nestjs/common';
+import { Controller, Get, Query, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { OAuth2Client } from 'google-auth-library';
 import { ConfigService } from '@nestjs/config';
@@ -16,8 +16,8 @@ export class AnalyticsController {
     private readonly configService: ConfigService,
   ) {
     this.oAuth2Client = new OAuth2Client(
-      this.configService.get('google.credentials.client_id'),
-      this.configService.get('google.credentials.client_secret'),
+      this.configService.get('google.oauth.client_id'),
+      this.configService.get('google.oauth.client_secret'),
       this.configService.get('host') + '/analytics/authenticated',
     );
   }
@@ -38,15 +38,11 @@ export class AnalyticsController {
   @Get('authenticated')
   async authenticated(@Query() params: { code: string }) {
     const today = new Date();
-    const startDate = subDays(today, 30);
-
+    const startDate = subDays(today, 7);
     const { code } = params;
     const result = await this.oAuth2Client.getToken(code);
     this.oAuth2Client.setCredentials(result.tokens);
-    // const auth = new GoogleAuth({ authClient: this.oAuth2Client });
-    // this.ga4ClientService.initClient(auth);
-    const response = this.ga4ClientService.getEventsReport(startDate, today, this.oAuth2Client);
-    // const response = this.ga4ClientService.getEventsReport(this.oAuth2Client);
+    const response = await this.ga4ClientService.getEventsReport(startDate, today, this.oAuth2Client);
     return this.ga4ClientService.parseReportResult(response);
   }
 
@@ -60,7 +56,13 @@ export class AnalyticsController {
     try {
       res.send(await this.analyticsService.getGa4Events());
     } catch (e) {
-      throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      res.status(500).send({
+        status: 'error',
+        statusCode: 500,
+        message: 'Something went wrong while fetching GA4 events.',
+      });
+      throw e;
     }
+
   }
 }

@@ -8,7 +8,7 @@ export class AnalyticsService {
   }
 
   async getGa4Events(): Promise<any> {
-    return await this.ga4ClientService.getEventsReport(subDays(new Date(), 30), new Date())
+    return await this.ga4ClientService.getEventsReport(subDays(new Date(), 7), new Date())
       .then(response => this.ga4ClientService.parseReportResult(response));
   }
 }

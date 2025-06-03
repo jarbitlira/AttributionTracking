@@ -17,7 +17,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "sentry:upload-sourcemaps": "npx @sentry/wizard@latest -i sourcemaps --saas"
   },
   "dependencies": {
     "@apollo/server": "^4.12.1",
@@ -31,6 +32,8 @@
     "@nestjs/mongoose": "^11.0.3",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/schedule": "^6.0.0",
+    "@sentry/nestjs": "^9.25.0",
+    "@sentry/profiling-node": "^9.25.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
     "date-fns": "^4.1.0",
