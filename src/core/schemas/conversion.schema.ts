@@ -12,7 +12,7 @@ export class Conversion {
   @Prop(String)
   conversionType: string;
 
-  @Prop({ type: String })
+  @Prop({ type: String, nullable: true })
   emailHash: string;
 
   @Prop({ type: Date, default: () => new Date().toISOString() })
