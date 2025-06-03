@@ -80,12 +80,11 @@ mutation createConversion($conversion: ConversionInput!) {
 ```
 {
     "conversion": {
-        "userId": "12345",
+        "userId": "3372545016",
         "email": "random@email.com",
         "conversionType": "purchase",
         "conversionValue": 100,
-        "attributedSource": "google",
-        "attributedCampaign": "spring_sale"
+        "timestamp": "2025-05-28T06:00:00Z"
     }
 }
 ```
@@ -96,14 +95,14 @@ mutation createConversion($conversion: ConversionInput!) {
 {
   "data": {
     "createConversion": {
-      "id": "665f1c...",
-      "userId": "12345",
-      "conversionValue": 100,
-      "conversionType": "purchase",
-      "attributedSource": "google",
-      "attributedCampaign": "spring_sale",
-      "timestamp": "2024-06-01T12:00:00.000Z",
-      "emailHash": "e3b0c44298fc1fb924..."
+      "id": "683e...",
+      "userId": "123",
+      "emailHash": "e8979cdf...",
+      "conversionType": "signup",
+      "conversionValue": 10,
+      "attributedSource": "facebook",
+      "attributedCampaign": "campaign2",
+      "timestamp": "2025-05-28T06:00:00.000Z"
     }
   }
 }
@@ -149,3 +148,13 @@ The backend matches conversion events to the latest relevant GA4 event using the
 - You have created a Google Cloud project and enabled the GA4 Data API.
 
 ---
+
+### Quick Start with Docker Compose
+
+For fast testing and local development, you can spin up the application and its dependencies using Docker Compose.  
+**Before running the command, make sure to copy `.env.example` to `.env` and fill in all required environment variables.**
+
+To build and start the services, run:
+
+```bash
+docker compose up --build
