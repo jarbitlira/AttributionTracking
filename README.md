@@ -55,6 +55,11 @@ It allows users to create conversions, which are then attributed to the last-cli
 
 ---
 
+### GraphQL Endpoint 
+
+
+`http://localhost:3000/graphql`
+
 ## Example Queries
 
 ### Create Conversion Mutation
